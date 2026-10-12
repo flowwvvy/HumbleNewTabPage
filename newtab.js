@@ -1611,3 +1611,30 @@ if (location.search === '?options')
 // refresh recently closed
 if (chrome.sessions)
 	chrome.sessions.onChanged.addListener(refreshClosed);
+
+// Minimal persistent scratchpad for Humble New Tab
+(function () {
+    var key = "humble.quickNote";
+
+    var box = document.createElement("div");
+    box.id = "humble-quick-note";
+
+    var note = document.createElement("textarea");
+    note.id = "humble-quick-note-text";
+    note.placeholder = "Quick note...";
+    note.setAttribute("aria-label", "Quick note");
+    note.spellcheck = false;
+
+    try {
+        note.value = localStorage.getItem(key) || "";
+    } catch (e) {}
+
+    note.addEventListener("input", function () {
+        try {
+            localStorage.setItem(key, note.value);
+        } catch (e) {}
+    });
+
+    box.appendChild(note);
+    document.body.appendChild(box);
+})();
